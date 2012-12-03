@@ -1,6 +1,6 @@
 adhesiontext for RoboFont
 =========================
-[RoboFont](http://www.robofont.com/) plug-in that sends adhesiontext.com results straight to Space Center.
+[RoboFont](http://www.robofont.com/) plug-in that sends [adhesiontext.com](http://adhesiontext.com/) results straight to Space Center.
 
 Installation
 -----
