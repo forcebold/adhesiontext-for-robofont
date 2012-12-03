@@ -2,7 +2,7 @@ adhesiontext for RoboFont
 =========================
 [RoboFont](http://www.robofont.com/) plug-in that sends adhesiontext.com results straight to Space Center.
 
-Instalation
+Installation
 -----
 1. Download `adhesiontext.py`
 2. Place the file in `~/Library/Application Support/RoboFont/scripts/`
