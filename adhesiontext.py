@@ -28,6 +28,7 @@ __doc__ = """
 adhesiontext for RoboFont
 
 v1.0 - Dec 03 2012 - First release
+v1.1 - Dec 26 2012 - Enabled Space Center's RTL-LTR toggling. Improvements and bug fixes in charsCallback()
 """
 
 #=============================================================
@@ -229,13 +230,14 @@ class Adhesiontext(BaseWindowController):
 				# restore the location of the caret
 				location = caretIndex + len(replacement)
 				nsTextView.setSelectedRange_((location, 0))
+				# update the variable
+				charsContent = sender.get()
 				
 			caretIndex = nsTextView.selectedRanges()[0].rangeValue().location
 			
 			# Limit the number of characters
-			charsContentRefresh = sender.get()
-			numeralWasFound = self.stringHasNumeral(charsContentRefresh)
-			if len(charsContentRefresh) > maxChars or numeralWasFound:
+			numeralWasFound = self.stringHasNumeral(charsContent)
+			if len(charsContent) > maxChars or numeralWasFound:
 				NSBeep()
 				if numeralWasFound:
 					self.showMessage("Sorry, numerals are not allowed.", "")
@@ -244,7 +246,7 @@ class Adhesiontext(BaseWindowController):
 				# restore the content of chars EditText to the previous string
 				sender.set(self.previousChars)
 				# restore the focus on the chars EditText and restore the location of the caret
-				caretIndexAdjust = len(self.previousChars) - len(charsContentRefresh)
+				caretIndexAdjust = len(self.previousChars) - len(charsContent)
 				self.w.getNSWindow().makeFirstResponder_(self.nsTextField)
 				nsTextView.setSelectedRange_((caretIndex + caretIndexAdjust, 0))
 			
@@ -350,12 +352,16 @@ class Adhesiontext(BaseWindowController):
 			OpenSpaceCenter(CurrentFont(), newWindow=False)
 		
 		sp = CurrentSpaceCenter()
-# 		if self.scriptIsRTL:
-# 			sp.setInputWritingDirection('Right to Left')
-# 		else:
-# 			sp.setInputWritingDirection('Left to Right')
+		
 		sp.setRaw(trimmedText)
 		
+		# Toggle RTL-LTR
+		try:
+			sp.setLeftToRight(not self.scriptIsRTL)
+			sp.setInputWritingDirection('Right to Left' if self.scriptIsRTL else 'Left to Right')
+		except AttributeError:
+			pass
+
 		return
 		
 Adhesiontext()

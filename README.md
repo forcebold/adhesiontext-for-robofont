@@ -11,6 +11,10 @@ Installation
 
 Changelog
 -----
+**v1.1 (26 December 2012)**
+- Enabled Space Center's RTL-LTR toggling
+- Improvements and bug fixes in charsCallback()
+
 **v1.0 (3 December 2012)**
 - First release
 
