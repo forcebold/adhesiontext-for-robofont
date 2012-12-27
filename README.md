@@ -9,6 +9,11 @@ Installation
 3. Start RoboFont
 4. Select **adhesiontext** from the *Extensions* menu
 
+Dependencies
+-----
+- [Vanilla](http://code.typesupply.com/wiki/Vanilla)
+- [DefconAppKit](http://code.typesupply.com/wiki/DefconAppKit)
+
 Changelog
 -----
 **v1.1 (26 December 2012)**
