@@ -1,5 +1,5 @@
 __copyright__ =  """
-Copyright (c) 2012, Miguel Sousa
+Copyright (c) 2012-2013, Miguel Sousa
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are
@@ -29,26 +29,43 @@ adhesiontext for RoboFont
 
 v1.0 - Dec 03 2012 - First release
 v1.1 - Dec 26 2012 - Enabled Space Center's RTL-LTR toggling. Improvements and bug fixes in charsCallback()
+v1.2 - Mar 16 2013 - Added Indian scripts and languages
 """
 
 #=============================================================
 
-scriptsNameList = "Latin Greek Cyrillic Arabic Hebrew".split()
+scriptsNameList = "Latin Cyrillic Greek Arabic Hebrew Bengali Devanagari Gujarati Odia Sinhala Malayalam Tamil Telugu".split()
 
 langsNameDict = {
 "Latin" : "English French German Spanish Catalan Portuguese Dutch Turkish".split(),
-"Greek" : ["Greek"],
 "Cyrillic" : "Russian Ukrainian".split(),
+"Greek" : ["Greek"],
 "Arabic" : "Arabic Persian".split(),
 "Hebrew" : ["Hebrew"],
+"Bengali" : ["Bengali"],
+"Devanagari" : "Hindi Marathi".split(),
+"Gujarati" : ["Gujarati"],
+"Odia" : ["Odia"],
+"Sinhala" : ["Sinhala"],
+"Malayalam" : ["Malayalam"],
+"Tamil" : ["Tamil"],
+"Telugu" : ["Telugu"],
 }
 
 scriptsTagDict = {
 "Latin" : "latn",
-"Greek" : "grek",
 "Cyrillic" : "cyrl",
+"Greek" : "grek",
 "Arabic" : "arab",
 "Hebrew" : "hebr",
+"Bengali" : "beng",
+"Devanagari" : "deva",
+"Gujarati" : "gujr",
+"Odia" : "orya",
+"Sinhala" : "sinh",
+"Malayalam" : "mlym",
+"Tamil" : "taml",
+"Telugu" : "telu",
 }
 
 langsTagDict = {
@@ -61,20 +78,30 @@ langsTagDict = {
 "Dutch" : "nld",
 "Turkish" : "tur",
 #-----
-"Greek" : "ell",
-#-----
 "Russian" : "rus",
 "Ukrainian" : "ukr",
+#-----
+"Greek" : "ell",
 #-----
 "Arabic" : "ara",
 "Persian" : "fas",
 #-----
 "Hebrew" : "heb",
+#-----
+"Bengali" : "ben",
+"Hindi" : "hin",
+"Marathi" : "mar",
+"Gujarati" : "guj",
+"Odia" : "ori",
+"Sinhala" : "sin",
+"Malayalam" : "mal",
+"Tamil" : "tam",
+"Telugu" : "tel",
 }
 
 rightToLeftList = "Arabic Hebrew".split()
-disableTrimCheckList = "Arabic Hebrew".split()
-disableCaseCheckList = "Arabic Hebrew".split()
+disableTrimCheckList = "Arabic Hebrew Bengali Devanagari Gujarati Odia Sinhala Malayalam Tamil Telugu".split()
+disableCaseCheckList = "Arabic Hebrew Bengali Devanagari Gujarati Odia Sinhala Malayalam Tamil Telugu".split()
 
 #=============================================================
 
@@ -93,7 +120,7 @@ re_numeral = re.compile(r'[0-9]')
 
 url = 'http://remote.adhesiontext.com/'
 
-maxChars = 35
+maxChars = 50
 
 casingNameList = ["UPPER", "lower", "Title"]
 

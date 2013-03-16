@@ -16,6 +16,9 @@ Dependencies
 
 Changelog
 -----
+**v1.2 (16 March 2013)**
+- Added Indian scripts and languages
+
 **v1.1 (26 December 2012)**
 - Enabled Space Center's RTL-LTR toggling
 - Improvements and bug fixes in charsCallback()
@@ -25,7 +28,7 @@ Changelog
 
 License
 -----
-Copyright (c) 2012, Miguel Sousa
+Copyright (c) 2012-2013, Miguel Sousa
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are
