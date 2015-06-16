@@ -257,7 +257,7 @@ class Adhesiontext(BaseWindowController):
 		
 		# 5th checkbox
 		self.w.casingCheck = CheckBox((flushAlign +15, firstCheckY + checkOffsetY *4, 115, 20), "Change casing", callback=self.casingCallback)
-		self.w.casingPopup = PopUpButton((210, firstCheckY + checkOffsetY *4, 80, 20), casingNameList)
+		self.w.casingPopup = PopUpButton((210, firstCheckY + checkOffsetY *4, 90, 20), casingNameList)
 		# enable or disable the casing PopUp depending on the casing CheckBox
 		if self.w.casingCheck.get():
 			self.w.casingPopup.enable(True)
@@ -384,8 +384,10 @@ class Adhesiontext(BaseWindowController):
 			self.w.figsPopup.enable(False)
 	
 	def casingCallback(self, sender):
-		if sender.get(): self.w.casingPopup.enable(True)
-		else: self.w.casingPopup.enable(False)
+		if sender.get():
+			self.w.casingPopup.enable(True)
+		else:
+			self.w.casingPopup.enable(False)
 	
 	def stringHasNumeral(self, string):
 		if re_numeral.search(string):
