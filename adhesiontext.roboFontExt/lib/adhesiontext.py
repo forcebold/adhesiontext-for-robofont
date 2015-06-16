@@ -137,8 +137,8 @@ langsTagDict = {
 }
 
 rightToLeftList = "Arabic Hebrew".split()
-disableTrimCheckList = "Arabic Hebrew Bengali Devanagari Gujarati Odia Sinhala Malayalam Tamil Telugu".split()
-disableCaseCheckList = "Arabic Hebrew Bengali Devanagari Gujarati Odia Sinhala Malayalam Tamil Telugu".split()
+enableTrimCheckList = "Latin Cyrillic Greek".split()
+enableCaseCheckList = "Latin Cyrillic Greek Armenian".split()
 
 #=============================================================
 
@@ -245,8 +245,10 @@ class Adhesiontext(BaseWindowController):
 		self.w.casingCheck = CheckBox((flushAlign +15, firstCheckY + checkOffsetY *4, 115, 20), "Change casing", callback=self.casingCallback)
 		self.w.casingPopup = PopUpButton((210, firstCheckY + checkOffsetY *4, 80, 20), casingNameList)
 		# enable or disable the casing PopUp depending on the casing CheckBox
-		if self.w.casingCheck.get(): self.w.casingPopup.enable(True)
-		else: self.w.casingPopup.enable(False)
+		if self.w.casingCheck.get():
+			self.w.casingPopup.enable(True)
+		else:
+			self.w.casingPopup.enable(False)
 		
 		self.nsTextField = self.w.chars.getNSTextField()
 		self.w.setDefaultButton(self.w.button)
@@ -337,18 +339,20 @@ class Adhesiontext(BaseWindowController):
 		# restore the focus on the chars EditText
 		self.w.getNSWindow().makeFirstResponder_(self.nsTextField)
 		# toggle trimCheck
-		if scriptsNameList[sender.get()] in disableTrimCheckList: self.w.trimCheck.enable(False)
-		else: self.w.trimCheck.enable(True)
-		# toggle caseCheck and casingCheck
-		if scriptsNameList[sender.get()] in disableCaseCheckList:
-			self.w.caseCheck.enable(False)
-			self.w.casingCheck.enable(False)
-			self.w.casingPopup.enable(False)
+		if scriptsNameList[sender.get()] in enableTrimCheckList:
+			self.w.trimCheck.enable(True)
 		else:
+			self.w.trimCheck.enable(False)
+		# toggle caseCheck and casingCheck
+		if scriptsNameList[sender.get()] in enableCaseCheckList:
 			self.w.caseCheck.enable(True)
 			self.w.casingCheck.enable(True)
 			if self.w.casingCheck.get():
 				self.w.casingPopup.enable(True)
+		else:
+			self.w.caseCheck.enable(False)
+			self.w.casingCheck.enable(False)
+			self.w.casingPopup.enable(False)
 	
 	def casingCallback(self, sender):
 		if sender.get(): self.w.casingPopup.enable(True)
