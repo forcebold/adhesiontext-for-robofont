@@ -146,6 +146,7 @@ enableFigOptionList = "Arabic \
 #=============================================================
 
 from mojo.UI import CurrentSpaceCenter, OpenSpaceCenter
+from mojo.extensions import getExtensionDefault, setExtensionDefault
 from vanilla import FloatingWindow, TextBox, EditText, Button, SquareButton, Slider, ProgressSpinner, PopUpButton, CheckBox
 from AppKit import NSBeep, NSWritingDirectionLeftToRight, NSWritingDirectionRightToLeft, NSLeftTextAlignment, NSRightTextAlignment
 from defconAppKit.windows.baseWindow import BaseWindowController
@@ -170,6 +171,7 @@ sndStr = "***SECOND***"
 wrnStr = "***WARNING***"
 rsltStr = "***RESULT***"
 
+extensionKey = "com.forcebold.adhesiontext"
 
 ## vanilla patch by Frederik Berlaen for issue in Lion and Mountain Lion
 class FixedSpinner(ProgressSpinner):
@@ -188,6 +190,20 @@ class FixedSpinner(ProgressSpinner):
 ## end vanilla patch
 
 
+class CheckBoxPlus(CheckBox):
+	"""
+	Same as CheckBox but with isEnable() method.
+	"""
+	def __init__(self, *args, **kwargs):
+		super(CheckBoxPlus, self).__init__(*args, **kwargs)
+	
+	def isEnable(self):
+		"""
+		Return a bool indicating if the object is enable or not.
+		"""
+		return self._nsObject.isEnabled()
+
+
 class Adhesiontext(BaseWindowController):
 
 	def __init__(self):
@@ -198,18 +214,48 @@ class Adhesiontext(BaseWindowController):
 		checkOffsetY = 27
 		rightMarginX = -12
 		self.windowWidth = 410
-		self.withoutOptionsHeight = 45
-		self.withOptionsHeight = 280
+		self.windowHeightWithoutOptions = 45
+		self.windowHeightWithOptions = 280
 		self.scriptIsRTL = False
+
+		windowPos = getExtensionDefault("%s.%s" % (extensionKey, "windowPos"))
+		if not windowPos:
+			windowPos = (100, 100)
 		
-		self.w = FloatingWindow((self.windowWidth, self.withoutOptionsHeight), "adhesiontext")
+		self.optionsVisible = getExtensionDefault("%s.%s" % (extensionKey, "optionsVisible"))
+		if self.optionsVisible:
+			optionsButtonSign = '-'
+			windowHeight = self.windowHeightWithOptions
+		else:
+			self.optionsVisible = False # needs to be set because the first time the extension runs self.optionsVisible will be None
+			optionsButtonSign = '+'
+			windowHeight = self.windowHeightWithoutOptions
+
+		self.chars = getExtensionDefault("%s.%s" % (extensionKey, "chars"))
+		if not self.chars:
+			self.chars = ''
+		
+		self.sliderValue = getExtensionDefault("%s.%s" % (extensionKey, "sliderValue"))
+		if not self.sliderValue:
+			self.sliderValue = 25
+		
+		self.scriptsIndex = getExtensionDefault("%s.%s" % (extensionKey, "scriptsIndex"))
+		if not self.scriptsIndex:
+			self.scriptsIndex = 0
+		
+		self.langsIndex = getExtensionDefault("%s.%s" % (extensionKey, "langsIndex"))
+		if not self.langsIndex:
+			self.langsIndex = 0
+		
+		
+		self.w = FloatingWindow((windowPos[0], windowPos[1], self.windowWidth, windowHeight), "adhesiontext")
 		
 		# 1st row
 		self.w.labelChars = TextBox((10, firstRowY, flushAlign, 20), "Characters:", alignment="right")
-		self.w.chars = EditText((flushAlign +15, firstRowY -1, 199, 22), callback=self.charsCallback)
+		self.w.chars = EditText((flushAlign +15, firstRowY -1, 199, 22), self.chars, callback=self.charsCallback)
 		self.w.button = Button((300, firstRowY, 68, 20), "Get text", callback=self.buttonCallback)
 		self.w.spinner = FixedSpinner((325, firstRowY, 20, 20), displayWhenStopped=False)
-		self.w.optionsButton = SquareButton((378, firstRowY +1, 18, 18), "+", sizeStyle="small", callback=self.optionsCallback)
+		self.w.optionsButton = SquareButton((378, firstRowY +1, 18, 18), optionsButtonSign, sizeStyle="small", callback=self.optionsCallback)
 		# set the initial state of the button according to the content of the chars EditText
 		if len(self.w.chars.get()): self.w.button.enable(True)
 		else: self.w.button.enable(False)
@@ -219,26 +265,59 @@ class Adhesiontext(BaseWindowController):
 		# 2nd row
 		self.w.labelWords = TextBox((10, firstRowY + rowOffsetY, flushAlign, 20), "Words:", alignment="right")
 		self.w.wordCount = TextBox((flushAlign +12, firstRowY + rowOffsetY, 40, 20), alignment="left")
-		self.w.slider = Slider((flushAlign +47, firstRowY + rowOffsetY +1, 165, 20), value=25, minValue=5, maxValue=200, callback=self.sliderCallback)
+		self.w.slider = Slider((flushAlign +47, firstRowY + rowOffsetY +1, 165, 20), value=self.sliderValue, minValue=5, maxValue=200, callback=self.sliderCallback)
 		# set the initial wordCount value according to the position of the slider
 		self.w.wordCount.set(int(self.w.slider.get()))
 		
 		# 3rd row
 		self.w.labelScripts = TextBox((10, firstRowY + rowOffsetY *2, flushAlign, 20), "Script:", alignment="right")
 		self.w.scriptsPopup = PopUpButton((flushAlign +15, firstRowY + rowOffsetY *2, 150, 20), scriptsNameList, callback=self.scriptsCallback)
+		self.w.scriptsPopup.set(self.scriptsIndex)
 		
 		# 4th row
 		self.w.labelLangs = TextBox((10, firstRowY + rowOffsetY *3, flushAlign, 20), "Language:", alignment="right")
 		self.w.langsPopup = PopUpButton((flushAlign +15, firstRowY + rowOffsetY *3, 150, 20), [])
 		# set the initial list of languages according to the script value
 		self.w.langsPopup.setItems(langsNameDict[scriptsNameList[self.w.scriptsPopup.get()]])
+		self.w.langsPopup.set(self.langsIndex)
+		
+		self.punctCheck = getExtensionDefault("%s.%s" % (extensionKey, "punctCheck"))
+		if not self.punctCheck:
+			self.punctCheck = 0
+		
+		self.figsCheck = getExtensionDefault("%s.%s" % (extensionKey, "figsCheck"))
+		if not self.figsCheck:
+			self.figsCheck = 0
+		
+		self.figsPopup = getExtensionDefault("%s.%s" % (extensionKey, "figsPopup"))
+		if not self.figsPopup:
+			self.figsPopup = 0
+		
+		self.trimCheck = getExtensionDefault("%s.%s" % (extensionKey, "trimCheck"))
+		if not self.trimCheck:
+			self.trimCheck = 0
+		
+		self.caseCheck = getExtensionDefault("%s.%s" % (extensionKey, "caseCheck"))
+		if not self.caseCheck:
+			self.caseCheck = 0
+		
+		self.casingCheck = getExtensionDefault("%s.%s" % (extensionKey, "casingCheck"))
+		if not self.casingCheck:
+			self.casingCheck = 0
+		
+		self.casingPopup = getExtensionDefault("%s.%s" % (extensionKey, "casingPopup"))
+		if not self.casingPopup:
+			self.casingPopup = 0
 		
 		# 1st checkbox
 		self.w.punctCheck = CheckBox((flushAlign +15, firstCheckY, 130, 20), "Add punctuation")
+		self.w.punctCheck.set(self.punctCheck)
 		
 		# 2nd checkbox
 		self.w.figsCheck = CheckBox((flushAlign +15, firstCheckY + checkOffsetY, 120, 20), "Insert numbers", callback=self.figsCallback)
+		self.w.figsCheck.set(self.figsCheck)
 		self.w.figsPopup = PopUpButton((210, firstCheckY + checkOffsetY, 90, 20), figOptionsList)
+		self.w.figsPopup.set(self.figsPopup)
 		# enable or disable the figure options PopUp depending on the figures CheckBox
 		if scriptsNameList[self.w.scriptsPopup.get()] in enableFigOptionList:
 			self.w.figsPopup.show(True)
@@ -250,25 +329,59 @@ class Adhesiontext(BaseWindowController):
 			self.w.figsPopup.show(False)
 		
 		# 3rd checkbox
-		self.w.trimCheck = CheckBox((flushAlign +15, firstCheckY + checkOffsetY *2, 120, 20), "Trim accents")
+		self.w.trimCheck = CheckBoxPlus((flushAlign +15, firstCheckY + checkOffsetY *2, 120, 20), "Trim accents")
+		self.w.trimCheck.set(self.trimCheck)
+		if scriptsNameList[self.w.scriptsPopup.get()] in enableTrimCheckList:
+			self.w.trimCheck.enable(True)
+		else:
+			self.w.trimCheck.enable(False)
 		
 		# 4th checkbox
-		self.w.caseCheck = CheckBox((flushAlign +15, firstCheckY + checkOffsetY *3, 120, 20), "Ignore casing")
+		self.w.caseCheck = CheckBoxPlus((flushAlign +15, firstCheckY + checkOffsetY *3, 120, 20), "Ignore casing")
+		self.w.caseCheck.set(self.caseCheck)
+		if scriptsNameList[self.w.scriptsPopup.get()] in enableCaseCheckList:
+			self.w.caseCheck.enable(True)
+		else:
+			self.w.caseCheck.enable(False)
 		
 		# 5th checkbox
-		self.w.casingCheck = CheckBox((flushAlign +15, firstCheckY + checkOffsetY *4, 115, 20), "Change casing", callback=self.casingCallback)
+		self.w.casingCheck = CheckBoxPlus((flushAlign +15, firstCheckY + checkOffsetY *4, 115, 20), "Change casing", callback=self.casingCallback)
+		self.w.casingCheck.set(self.casingCheck)
+		if scriptsNameList[self.w.scriptsPopup.get()] in enableCaseCheckList:
+			self.w.casingCheck.enable(True)
+		else:
+			self.w.casingCheck.enable(False)
 		self.w.casingPopup = PopUpButton((210, firstCheckY + checkOffsetY *4, 90, 20), casingNameList)
+		self.w.casingPopup.set(self.casingPopup)
 		# enable or disable the casing PopUp depending on the casing CheckBox
-		if self.w.casingCheck.get():
+		if self.w.casingCheck.get() and self.w.casingCheck.isEnable():
 			self.w.casingPopup.enable(True)
 		else:
 			self.w.casingPopup.enable(False)
 		
 		self.nsTextField = self.w.chars.getNSTextField()
 		self.w.setDefaultButton(self.w.button)
-		self.w.center()
+		self.w.bind("close", self.windowClose)
 		self.w.open()
 	
+	def windowClose(self, sender):
+		self.saveExtensionDefaults()
+
+	def saveExtensionDefaults(self):
+		setExtensionDefault("%s.%s" % (extensionKey, "windowPos"), self.w.getPosSize()[0:2])
+		setExtensionDefault("%s.%s" % (extensionKey, "optionsVisible"), self.optionsVisible)
+		setExtensionDefault("%s.%s" % (extensionKey, "chars"), self.w.chars.get())
+		setExtensionDefault("%s.%s" % (extensionKey, "sliderValue"), int(self.w.slider.get()))
+		setExtensionDefault("%s.%s" % (extensionKey, "scriptsIndex"), int(self.w.scriptsPopup.get()))
+		setExtensionDefault("%s.%s" % (extensionKey, "langsIndex"), int(self.w.langsPopup.get()))
+		setExtensionDefault("%s.%s" % (extensionKey, "punctCheck"), self.w.punctCheck.get())
+		setExtensionDefault("%s.%s" % (extensionKey, "figsCheck"), self.w.figsCheck.get())
+		setExtensionDefault("%s.%s" % (extensionKey, "figsPopup"), self.w.figsPopup.get())
+		setExtensionDefault("%s.%s" % (extensionKey, "trimCheck"), self.w.trimCheck.get())
+		setExtensionDefault("%s.%s" % (extensionKey, "caseCheck"), self.w.caseCheck.get())
+		setExtensionDefault("%s.%s" % (extensionKey, "casingCheck"), self.w.casingCheck.get())
+		setExtensionDefault("%s.%s" % (extensionKey, "casingPopup"), self.w.casingPopup.get())
+
 	def buttonCallback(self, sender):
 		sender.enable(False)
 		self.w.spinner.start()
@@ -280,10 +393,12 @@ class Adhesiontext(BaseWindowController):
 		sign = sender.getTitle()
 		if sign == "+":
 			sender.setTitle("-")
-			self.w.resize(self.windowWidth, self.withOptionsHeight, animate=True)
+			self.w.resize(self.windowWidth, self.windowHeightWithOptions, animate=True)
+			self.optionsVisible = True
 		else:
 			sender.setTitle("+")
-			self.w.resize(self.windowWidth, self.withoutOptionsHeight, animate=True)
+			self.w.resize(self.windowWidth, self.windowHeightWithoutOptions, animate=True)
+			self.optionsVisible = False
 		
 	def charsCallback(self, sender):
 		charsContent = sender.get()
@@ -417,15 +532,19 @@ class Adhesiontext(BaseWindowController):
 				  'script' : scriptsTagDict[scriptsNameList[self.w.scriptsPopup.get()]],
 				  'tb' : langsTagDict[langsNameDict[scriptsNameList[self.w.scriptsPopup.get()]][self.w.langsPopup.get()]] }
 		
-		if (self.w.punctCheck.get()): values['punct'] = True
-		if (self.w.figsCheck.get()):
+		if self.w.punctCheck.get():
+			values['punct'] = True
+		if self.w.figsCheck.get():
 			values['figs'] = True
 			if self.w.figsPopup.isVisible():
 				figsOptTagsList = ["dflt", "locl"]
 				values['figsOpt'] = figsOptTagsList[self.w.figsPopup.get()]
-		if (self.w.trimCheck.get()): values['trim'] = True
-		if (self.w.caseCheck.get()): values['case'] = True
-		if (self.w.casingCheck.get()): values['casing'] = casingNameList[self.w.casingPopup.get()].lower()
+		if self.w.trimCheck.get() and self.w.trimCheck.isEnable():
+			values['trim'] = True
+		if self.w.caseCheck.get() and self.w.caseCheck.isEnable():
+			values['case'] = True
+		if self.w.casingCheck.get() and self.w.casingCheck.isEnable():
+			values['casing'] = casingNameList[self.w.casingPopup.get()].lower()
 		
 		data = urllib.urlencode(values)
 		request = urllib2.Request(url, data)
@@ -468,4 +587,3 @@ class Adhesiontext(BaseWindowController):
 		return
 		
 Adhesiontext()
-
