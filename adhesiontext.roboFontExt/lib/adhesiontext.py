@@ -34,69 +34,106 @@ v1.2 - Mar 16 2013 - Added Indian scripts and languages
 
 #=============================================================
 
-scriptsNameList = "Latin Cyrillic Greek Arabic Hebrew Bengali Devanagari Gujarati Odia Sinhala Malayalam Tamil Telugu".split()
+scriptsNameList = "Latin Cyrillic Greek Armenian \
+                   Arabic Hebrew \
+                   Bengali Devanagari Gujarati Gurmukhi Odia Sinhala Kannada Malayalam Tamil Telugu \
+                   Burmese Thai Khmer \
+                   Hangul".split()
 
 langsNameDict = {
-"Latin" : "English French German Spanish Catalan Portuguese Dutch Turkish".split(),
+"Latin"    : "English French German Spanish Catalan Portuguese Dutch Turkish Slovene".split(),
 "Cyrillic" : "Russian Ukrainian".split(),
-"Greek" : ["Greek"],
+"Greek"    : ["Greek"],
+"Armenian" : ["Armenian"],
+#-----
 "Arabic" : "Arabic Persian".split(),
 "Hebrew" : ["Hebrew"],
-"Bengali" : ["Bengali"],
+#-----
+"Bengali"    : ["Bengali"],
 "Devanagari" : "Hindi Marathi".split(),
-"Gujarati" : ["Gujarati"],
-"Odia" : ["Odia"],
-"Sinhala" : ["Sinhala"],
-"Malayalam" : ["Malayalam"],
-"Tamil" : ["Tamil"],
-"Telugu" : ["Telugu"],
+"Gujarati"   : ["Gujarati"],
+"Gurmukhi"   : ["Punjabi"],
+"Odia"       : ["Odia"],
+"Sinhala"    : ["Sinhala"],
+"Kannada"    : ["Kannada"],
+"Malayalam"  : ["Malayalam"],
+"Tamil"      : ["Tamil"],
+"Telugu"     : ["Telugu"],
+#-----
+"Burmese" : ["Burmese"],
+"Thai"    : ["Thai"],
+"Khmer"   : ["Khmer"],
+#-----
+"Hangul"  : ["Korean"],
 }
 
 scriptsTagDict = {
-"Latin" : "latn",
+"Latin"    : "latn",
 "Cyrillic" : "cyrl",
-"Greek" : "grek",
+"Greek"    : "grek",
+"Armenian" : "armn",
+#-----
 "Arabic" : "arab",
 "Hebrew" : "hebr",
-"Bengali" : "beng",
+#-----
+"Bengali"    : "beng",
 "Devanagari" : "deva",
-"Gujarati" : "gujr",
-"Odia" : "orya",
-"Sinhala" : "sinh",
-"Malayalam" : "mlym",
-"Tamil" : "taml",
-"Telugu" : "telu",
+"Gujarati"   : "gujr",
+"Gurmukhi"   : "guru",
+"Odia"       : "orya",
+"Sinhala"    : "sinh",
+"Kannada"    : "knda",
+"Malayalam"  : "mlym",
+"Tamil"      : "taml",
+"Telugu"     : "telu",
+#-----
+"Burmese" : "mymr",
+"Thai"    : "thai",
+"Khmer"   : "khmr",
+#-----
+"Hangul"  : "hang",
 }
 
 langsTagDict = {
-"English" : "eng",
-"French" : "fra",
-"German" : "deu",
-"Spanish" : "esp",
-"Catalan" : "cat",
+#--Latin--
+"English"    : "eng",
+"French"     : "fra",
+"German"     : "deu",
+"Spanish"    : "esp",
+"Catalan"    : "cat",
 "Portuguese" : "ptg",
-"Dutch" : "nld",
-"Turkish" : "tur",
-#-----
-"Russian" : "rus",
+"Dutch"      : "nld",
+"Turkish"    : "tur",
+"Slovene"    : "slv",
+#--Cyrillic--
+"Russian"   : "rus",
 "Ukrainian" : "ukr",
 #-----
-"Greek" : "ell",
+"Greek"     : "ell",
+"Armenian"  : "hye",
+#--Arabic--
+"Arabic"    : "ara",
+"Persian"   : "fas",
 #-----
-"Arabic" : "ara",
-"Persian" : "fas",
-#-----
-"Hebrew" : "heb",
-#-----
-"Bengali" : "ben",
-"Hindi" : "hin",
-"Marathi" : "mar",
-"Gujarati" : "guj",
-"Odia" : "ori",
-"Sinhala" : "sin",
+"Hebrew"    : "heb",
+#--Indian--
+"Bengali"   : "ben",
+"Hindi"     : "hin",
+"Marathi"   : "mar",
+"Gujarati"  : "guj",
+"Punjabi"   : "pan",
+"Odia"      : "ori",
+"Sinhala"   : "sin",
+"Kannada"   : "kan",
 "Malayalam" : "mal",
-"Tamil" : "tam",
-"Telugu" : "tel",
+"Tamil"     : "tam",
+"Telugu"    : "tel",
+#-----
+"Burmese" : "brm",
+"Thai"    : "tha",
+"Khmer"   : "khm",
+#-----
+"Korean"  : "kor",
 }
 
 rightToLeftList = "Arabic Hebrew".split()
