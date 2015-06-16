@@ -120,7 +120,7 @@ re_numeral = re.compile(r'[0-9]')
 
 url = 'http://remote.adhesiontext.com/'
 
-maxChars = 50
+maxChars = 100
 
 casingNameList = ["UPPER", "lower", "Title"]
 
