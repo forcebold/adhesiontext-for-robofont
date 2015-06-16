@@ -1,5 +1,5 @@
 __copyright__ =  """
-Copyright (c) 2012-2013, Miguel Sousa
+Copyright (c) 2012-2015, Miguel Sousa
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are
@@ -27,9 +27,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 __doc__ = """
 adhesiontext for RoboFont
 
-v1.0 - Dec 03 2012 - First release
-v1.1 - Dec 26 2012 - Enabled Space Center's RTL-LTR toggling. Improvements and bug fixes in charsCallback()
-v1.2 - Mar 16 2013 - Added Indian scripts and languages
+v1.0 - Dec 03 2012 - First release.
+v1.1 - Dec 26 2012 - Enabled Space Center's RTL-LTR toggling. Improvements and bug fixes in charsCallback().
+v1.2 - Mar 16 2013 - Added Indian scripts and languages.
+v2.0 - Jun 16 2015 - Converted to extension and enabled Mechanic installation.
+                     Enabled the same set of scripts, languages and options as adhesiontext.com.
+                     Enabled storing and recovering the last settings used.
 """
 
 #=============================================================

@@ -4,31 +4,31 @@ adhesiontext for RoboFont
 
 Installation
 -----
-1. Download `adhesiontext.py`
-2. Place the file in `~/Library/Application Support/RoboFont/scripts/`
-3. Start RoboFont
-4. Select **adhesiontext** from the *Extensions* menu
-
-Dependencies
------
-- [Vanilla](http://code.typesupply.com/wiki/Vanilla)
-- [DefconAppKit](http://code.typesupply.com/wiki/DefconAppKit)
+Install via [Mechanic](http://www.robofontmechanic.com/)
+**OR**
+1. Download the [ZIP package](https://github.com/forcebold/adhesiontext-for-robofont/archive/master.zip) and unzip it.
+2. Double-click on the extension file.
 
 Changelog
 -----
+**v2.0 (16 June 2015)**
+- Converted to extension and enabled Mechanic installation.
+- Enabled the same set of scripts, languages and options as adhesiontext.com.
+- Enabled storing and recovering the last settings used.
+
 **v1.2 (16 March 2013)**
-- Added Indian scripts and languages
+- Added Indian scripts and languages.
 
 **v1.1 (26 December 2012)**
-- Enabled Space Center's RTL-LTR toggling
-- Improvements and bug fixes in charsCallback()
+- Enabled Space Center's RTL-LTR toggling.
+- Improvements and bug fixes in charsCallback().
 
 **v1.0 (3 December 2012)**
-- First release
+- First release.
 
 License
 -----
-Copyright (c) 2012-2013, Miguel Sousa
+Copyright (c) 2012-2015, Miguel Sousa
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are
