@@ -139,6 +139,9 @@ langsTagDict = {
 rightToLeftList = "Arabic Hebrew".split()
 enableTrimCheckList = "Latin Cyrillic Greek".split()
 enableCaseCheckList = "Latin Cyrillic Greek Armenian".split()
+enableFigOptionList = "Arabic \
+                       Bengali Devanagari Gujarati Gurmukhi Odia Kannada Malayalam Tamil Telugu \
+                       Burmese Thai Khmer".split()
 
 #=============================================================
 
@@ -160,6 +163,7 @@ url = 'http://remote.adhesiontext.com/'
 maxChars = 100
 
 casingNameList = ["UPPER", "lower", "Title"]
+figOptionsList = ["Default", "Localized"]
 
 msgStr = "***MESSAGE***"
 sndStr = "***SECOND***"
@@ -233,7 +237,17 @@ class Adhesiontext(BaseWindowController):
 		self.w.punctCheck = CheckBox((flushAlign +15, firstCheckY, 130, 20), "Add punctuation")
 		
 		# 2nd checkbox
-		self.w.figsCheck = CheckBox((flushAlign +15, firstCheckY + checkOffsetY, 120, 20), "Insert numbers")
+		self.w.figsCheck = CheckBox((flushAlign +15, firstCheckY + checkOffsetY, 120, 20), "Insert numbers", callback=self.figsCallback)
+		self.w.figsPopup = PopUpButton((210, firstCheckY + checkOffsetY, 90, 20), figOptionsList)
+		# enable or disable the figure options PopUp depending on the figures CheckBox
+		if scriptsNameList[self.w.scriptsPopup.get()] in enableFigOptionList:
+			self.w.figsPopup.show(True)
+			if self.w.figsCheck.get():
+				self.w.figsPopup.enable(True)
+			else:
+				self.w.figsPopup.enable(False)
+		else:
+			self.w.figsPopup.show(False)
 		
 		# 3rd checkbox
 		self.w.trimCheck = CheckBox((flushAlign +15, firstCheckY + checkOffsetY *2, 120, 20), "Trim accents")
@@ -338,6 +352,15 @@ class Adhesiontext(BaseWindowController):
 			self.nsTextField.setAlignment_(NSLeftTextAlignment)
 		# restore the focus on the chars EditText
 		self.w.getNSWindow().makeFirstResponder_(self.nsTextField)
+		# toggle figsPopup
+		if scriptsNameList[sender.get()] in enableFigOptionList:
+			self.w.figsPopup.show(True)
+			if self.w.figsCheck.get():
+				self.w.figsPopup.enable(True)
+			else:
+				self.w.figsPopup.enable(False)
+		else:
+			self.w.figsPopup.show(False)
 		# toggle trimCheck
 		if scriptsNameList[sender.get()] in enableTrimCheckList:
 			self.w.trimCheck.enable(True)
@@ -353,6 +376,12 @@ class Adhesiontext(BaseWindowController):
 			self.w.caseCheck.enable(False)
 			self.w.casingCheck.enable(False)
 			self.w.casingPopup.enable(False)
+	
+	def figsCallback(self, sender):
+		if sender.get():
+			self.w.figsPopup.enable(True)
+		else:
+			self.w.figsPopup.enable(False)
 	
 	def casingCallback(self, sender):
 		if sender.get(): self.w.casingPopup.enable(True)
@@ -387,7 +416,11 @@ class Adhesiontext(BaseWindowController):
 				  'tb' : langsTagDict[langsNameDict[scriptsNameList[self.w.scriptsPopup.get()]][self.w.langsPopup.get()]] }
 		
 		if (self.w.punctCheck.get()): values['punct'] = True
-		if (self.w.figsCheck.get()): values['figs'] = True
+		if (self.w.figsCheck.get()):
+			values['figs'] = True
+			if self.w.figsPopup.isVisible():
+				figsOptTagsList = ["dflt", "locl"]
+				values['figsOpt'] = figsOptTagsList[self.w.figsPopup.get()]
 		if (self.w.trimCheck.get()): values['trim'] = True
 		if (self.w.caseCheck.get()): values['case'] = True
 		if (self.w.casingCheck.get()): values['casing'] = casingNameList[self.w.casingPopup.get()].lower()
