@@ -142,9 +142,9 @@ disableCaseCheckList = "Arabic Hebrew Bengali Devanagari Gujarati Odia Sinhala M
 
 #=============================================================
 
-from mojo.UI import *
-from vanilla import *
-from AppKit import *
+from mojo.UI import CurrentSpaceCenter, OpenSpaceCenter
+from vanilla import FloatingWindow, TextBox, EditText, Button, SquareButton, Slider, ProgressSpinner, PopUpButton, CheckBox
+from AppKit import NSBeep, NSWritingDirectionLeftToRight, NSWritingDirectionRightToLeft, NSLeftTextAlignment, NSRightTextAlignment
 from defconAppKit.windows.baseWindow import BaseWindowController
 import urllib, urllib2
 import re
