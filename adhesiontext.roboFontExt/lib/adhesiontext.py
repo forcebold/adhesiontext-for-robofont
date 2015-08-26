@@ -33,6 +33,7 @@ v1.2 - Mar 16 2013 - Added Indian scripts and languages.
 v2.0 - Jun 16 2015 - Converted to extension and enabled Mechanic installation.
                      Enabled the same set of scripts, languages and options as adhesiontext.com.
                      Enabled storing and recovering the last settings used.
+v2.1 - Ago 25 2015 - Assign the focus to the window when it opens.
 """
 
 #=============================================================
@@ -366,6 +367,7 @@ class Adhesiontext(BaseWindowController):
 		self.w.setDefaultButton(self.w.button)
 		self.w.bind("close", self.windowClose)
 		self.w.open()
+		self.w.makeKey()
 
 	def windowClose(self, sender):
 		self.saveExtensionDefaults()

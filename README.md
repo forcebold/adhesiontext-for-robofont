@@ -5,12 +5,17 @@ adhesiontext for RoboFont
 Installation
 -----
 Install via [Mechanic](http://www.robofontmechanic.com/)
+
 **OR**
+
 1. Download the [ZIP package](https://github.com/forcebold/adhesiontext-for-robofont/archive/master.zip) and unzip it.
 2. Double-click on the extension file.
 
 Changelog
 -----
+**v2.1 (25 August 2015)**
+- Assign the focus to the window when it opens.
+
 **v2.0 (16 June 2015)**
 - Converted to extension and enabled Mechanic installation.
 - Enabled the same set of scripts, languages and options as adhesiontext.com.
