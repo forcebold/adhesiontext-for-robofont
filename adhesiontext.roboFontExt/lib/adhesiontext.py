@@ -178,15 +178,15 @@ extensionKey = "com.forcebold.adhesiontext"
 
 ## vanilla patch by Frederik Berlaen for issue in Lion and Mountain Lion
 class FixedSpinner(ProgressSpinner):
-	
+
 	def __init__(self, *args, **kwargs):
 		super(FixedSpinner, self).__init__(*args, **kwargs)
 		self.show(False)
-	
+
 	def start(self):
 		self.show(True)
 		super(FixedSpinner, self).start()
-	
+
 	def stop(self):
 		self.show(False)
 		super(FixedSpinner, self).stop()
@@ -199,7 +199,7 @@ class CheckBoxPlus(CheckBox):
 	"""
 	def __init__(self, *args, **kwargs):
 		super(CheckBoxPlus, self).__init__(*args, **kwargs)
-	
+
 	def isEnable(self):
 		"""
 		Return a bool indicating if the object is enable or not.
@@ -224,7 +224,7 @@ class Adhesiontext(BaseWindowController):
 		windowPos = getExtensionDefault("%s.%s" % (extensionKey, "windowPos"))
 		if not windowPos:
 			windowPos = (100, 100)
-		
+
 		self.optionsVisible = getExtensionDefault("%s.%s" % (extensionKey, "optionsVisible"))
 		if self.optionsVisible:
 			optionsButtonSign = '-'
@@ -237,22 +237,22 @@ class Adhesiontext(BaseWindowController):
 		self.chars = getExtensionDefault("%s.%s" % (extensionKey, "chars"))
 		if not self.chars:
 			self.chars = ''
-		
+
 		self.sliderValue = getExtensionDefault("%s.%s" % (extensionKey, "sliderValue"))
 		if not self.sliderValue:
 			self.sliderValue = 25
-		
+
 		self.scriptsIndex = getExtensionDefault("%s.%s" % (extensionKey, "scriptsIndex"))
 		if not self.scriptsIndex:
 			self.scriptsIndex = 0
-		
+
 		self.langsIndex = getExtensionDefault("%s.%s" % (extensionKey, "langsIndex"))
 		if not self.langsIndex:
 			self.langsIndex = 0
-		
-		
+
+
 		self.w = FloatingWindow((windowPos[0], windowPos[1], self.windowWidth, windowHeight), "adhesiontext")
-		
+
 		# 1st row
 		self.w.labelChars = TextBox((10, firstRowY, flushAlign, 20), "Characters:", alignment="right")
 		self.w.chars = EditText((flushAlign +15, firstRowY -1, 199, 22), self.chars, callback=self.charsCallback)
@@ -264,58 +264,58 @@ class Adhesiontext(BaseWindowController):
 		else: self.w.button.enable(False)
 		# keep track of the content of chars EditText
 		self.previousChars = self.w.chars.get()
-		
+
 		# 2nd row
 		self.w.labelWords = TextBox((10, firstRowY + rowOffsetY, flushAlign, 20), "Words:", alignment="right")
 		self.w.wordCount = TextBox((flushAlign +12, firstRowY + rowOffsetY, 40, 20), alignment="left")
 		self.w.slider = Slider((flushAlign +47, firstRowY + rowOffsetY +1, 165, 20), value=self.sliderValue, minValue=5, maxValue=200, callback=self.sliderCallback)
 		# set the initial wordCount value according to the position of the slider
 		self.w.wordCount.set(int(self.w.slider.get()))
-		
+
 		# 3rd row
 		self.w.labelScripts = TextBox((10, firstRowY + rowOffsetY *2, flushAlign, 20), "Script:", alignment="right")
 		self.w.scriptsPopup = PopUpButton((flushAlign +15, firstRowY + rowOffsetY *2, 150, 20), scriptsNameList, callback=self.scriptsCallback)
 		self.w.scriptsPopup.set(self.scriptsIndex)
-		
+
 		# 4th row
 		self.w.labelLangs = TextBox((10, firstRowY + rowOffsetY *3, flushAlign, 20), "Language:", alignment="right")
 		self.w.langsPopup = PopUpButton((flushAlign +15, firstRowY + rowOffsetY *3, 150, 20), [])
 		# set the initial list of languages according to the script value
 		self.w.langsPopup.setItems(langsNameDict[scriptsNameList[self.w.scriptsPopup.get()]])
 		self.w.langsPopup.set(self.langsIndex)
-		
+
 		self.punctCheck = getExtensionDefault("%s.%s" % (extensionKey, "punctCheck"))
 		if not self.punctCheck:
 			self.punctCheck = 0
-		
+
 		self.figsCheck = getExtensionDefault("%s.%s" % (extensionKey, "figsCheck"))
 		if not self.figsCheck:
 			self.figsCheck = 0
-		
+
 		self.figsPopup = getExtensionDefault("%s.%s" % (extensionKey, "figsPopup"))
 		if not self.figsPopup:
 			self.figsPopup = 0
-		
+
 		self.trimCheck = getExtensionDefault("%s.%s" % (extensionKey, "trimCheck"))
 		if not self.trimCheck:
 			self.trimCheck = 0
-		
+
 		self.caseCheck = getExtensionDefault("%s.%s" % (extensionKey, "caseCheck"))
 		if not self.caseCheck:
 			self.caseCheck = 0
-		
+
 		self.casingCheck = getExtensionDefault("%s.%s" % (extensionKey, "casingCheck"))
 		if not self.casingCheck:
 			self.casingCheck = 0
-		
+
 		self.casingPopup = getExtensionDefault("%s.%s" % (extensionKey, "casingPopup"))
 		if not self.casingPopup:
 			self.casingPopup = 0
-		
+
 		# 1st checkbox
 		self.w.punctCheck = CheckBox((flushAlign +15, firstCheckY, 130, 20), "Add punctuation")
 		self.w.punctCheck.set(self.punctCheck)
-		
+
 		# 2nd checkbox
 		self.w.figsCheck = CheckBox((flushAlign +15, firstCheckY + checkOffsetY, 120, 20), "Insert numbers", callback=self.figsCallback)
 		self.w.figsCheck.set(self.figsCheck)
@@ -330,7 +330,7 @@ class Adhesiontext(BaseWindowController):
 				self.w.figsPopup.enable(False)
 		else:
 			self.w.figsPopup.show(False)
-		
+
 		# 3rd checkbox
 		self.w.trimCheck = CheckBoxPlus((flushAlign +15, firstCheckY + checkOffsetY *2, 120, 20), "Trim accents")
 		self.w.trimCheck.set(self.trimCheck)
@@ -338,7 +338,7 @@ class Adhesiontext(BaseWindowController):
 			self.w.trimCheck.enable(True)
 		else:
 			self.w.trimCheck.enable(False)
-		
+
 		# 4th checkbox
 		self.w.caseCheck = CheckBoxPlus((flushAlign +15, firstCheckY + checkOffsetY *3, 120, 20), "Ignore casing")
 		self.w.caseCheck.set(self.caseCheck)
@@ -346,7 +346,7 @@ class Adhesiontext(BaseWindowController):
 			self.w.caseCheck.enable(True)
 		else:
 			self.w.caseCheck.enable(False)
-		
+
 		# 5th checkbox
 		self.w.casingCheck = CheckBoxPlus((flushAlign +15, firstCheckY + checkOffsetY *4, 115, 20), "Change casing", callback=self.casingCallback)
 		self.w.casingCheck.set(self.casingCheck)
@@ -361,12 +361,12 @@ class Adhesiontext(BaseWindowController):
 			self.w.casingPopup.enable(True)
 		else:
 			self.w.casingPopup.enable(False)
-		
+
 		self.nsTextField = self.w.chars.getNSTextField()
 		self.w.setDefaultButton(self.w.button)
 		self.w.bind("close", self.windowClose)
 		self.w.open()
-	
+
 	def windowClose(self, sender):
 		self.saveExtensionDefaults()
 
@@ -391,7 +391,7 @@ class Adhesiontext(BaseWindowController):
 		self.getText()
 		self.w.spinner.stop()
 		sender.enable(True)
-		
+
 	def optionsCallback(self, sender):
 		sign = sender.getTitle()
 		if sign == "+":
@@ -402,27 +402,27 @@ class Adhesiontext(BaseWindowController):
 			sender.setTitle("+")
 			self.w.resize(self.windowWidth, self.windowHeightWithoutOptions, animate=True)
 			self.optionsVisible = False
-		
+
 	def charsCallback(self, sender):
 		charsContent = sender.get()
 		if len(charsContent):
 			self.w.button.enable(True)
 			nsTextView = self.nsTextField.currentEditor() # NOTE: the field editor is only available when NSTextField is in editing mode.
-			
+
 			# when only one glyph is selected and copied, the contents of the clipboard are the glyph's XML
 			# instead of its unicode character or its name; therefore, post-process the pasted content.
 			if xmlHeader in charsContent:
 				caretIndex = charsContent.index(xmlHeader)
 				codepointString = re_glyphUnicode.search(charsContent)
 				glyphName = re_glyphName.search(charsContent)
-			
+
 				if codepointString:
 					replacement = unichr(eval('0x' + codepointString.group(1)))
 				elif glyphName:
 					replacement = '/' + glyphName.group(1)
 				else:
 					replacement = ''
-			
+
 				# replace the glyph's XML by its unicode character or its name
 				self.w.chars.set(re_glyph.sub(replacement, charsContent))
 				# restore the location of the caret
@@ -430,9 +430,9 @@ class Adhesiontext(BaseWindowController):
 				nsTextView.setSelectedRange_((location, 0))
 				# update the variable
 				charsContent = sender.get()
-				
+
 			caretIndex = nsTextView.selectedRanges()[0].rangeValue().location
-			
+
 			# Limit the number of characters
 			numeralWasFound = self.stringHasNumeral(charsContent)
 			if len(charsContent) > maxChars or numeralWasFound:
@@ -447,16 +447,16 @@ class Adhesiontext(BaseWindowController):
 				caretIndexAdjust = len(self.previousChars) - len(charsContent)
 				self.w.getNSWindow().makeFirstResponder_(self.nsTextField)
 				nsTextView.setSelectedRange_((caretIndex + caretIndexAdjust, 0))
-			
+
 			# update the stored string
 			self.previousChars = sender.get()
-		
+
 		else:
 			self.w.button.enable(False)
-	
+
 	def sliderCallback(self, sender):
 		self.w.wordCount.set(int(sender.get()))
-	
+
 	def scriptsCallback(self, sender):
 		self.w.langsPopup.setItems(langsNameDict[scriptsNameList[sender.get()]])
 		# toggle RTL/LTR
@@ -494,19 +494,19 @@ class Adhesiontext(BaseWindowController):
 			self.w.caseCheck.enable(False)
 			self.w.casingCheck.enable(False)
 			self.w.casingPopup.enable(False)
-	
+
 	def figsCallback(self, sender):
 		if sender.get():
 			self.w.figsPopup.enable(True)
 		else:
 			self.w.figsPopup.enable(False)
-	
+
 	def casingCallback(self, sender):
 		if sender.get():
 			self.w.casingPopup.enable(True)
 		else:
 			self.w.casingPopup.enable(False)
-	
+
 	def stringHasNumeral(self, string):
 		if re_numeral.search(string):
 			return True
@@ -525,16 +525,16 @@ class Adhesiontext(BaseWindowController):
 			NSBeep()
 			self.showMessage("Open a font first.", "")
 			return
-		
+
 		if not self.isConnected():
 			NSBeep()
 			self.showMessage("Required internet connection not found.", "")
 			return
-		
+
 		values = {'chars' : self.w.chars.get().encode('utf-8'),
 				  'script' : scriptsTagDict[scriptsNameList[self.w.scriptsPopup.get()]],
 				  'tb' : langsTagDict[langsNameDict[scriptsNameList[self.w.scriptsPopup.get()]][self.w.langsPopup.get()]] }
-		
+
 		if self.w.punctCheck.get():
 			values['punct'] = True
 		if self.w.figsCheck.get():
@@ -548,19 +548,19 @@ class Adhesiontext(BaseWindowController):
 			values['case'] = True
 		if self.w.casingCheck.get() and self.w.casingCheck.isEnable():
 			values['casing'] = casingNameList[self.w.casingPopup.get()].lower()
-		
+
 		data = urllib.urlencode(values)
 		request = urllib2.Request(url, data)
 		response = urllib2.urlopen(request)
 		text = response.read()
 		textU = unicode(text, 'utf-8')
-		
+
 		if (msgStr in textU):
 			textU = textU.replace(msgStr, "")
 			NSBeep()
 			self.showMessage(textU, "")
 			return
-		
+
 		elif (wrnStr in textU):
 			resultIndex = textU.find(rsltStr)
 			secmsgIndex = textU.find(sndStr)
@@ -569,17 +569,17 @@ class Adhesiontext(BaseWindowController):
 			textU = textU[resultIndex:].replace(rsltStr, "")
 			NSBeep()
 			self.showMessage(frstmsgU, scndmsgU)
-		
+
 		textList = textU.split()
 		trimmedText = ' '.join(textList[:int(self.w.slider.get())])
 
 		if CurrentSpaceCenter() is None:
 			OpenSpaceCenter(CurrentFont(), newWindow=False)
-		
+
 		sp = CurrentSpaceCenter()
-		
+
 		sp.setRaw(trimmedText)
-		
+
 		# Toggle RTL-LTR
 		try:
 			sp.setLeftToRight(not self.scriptIsRTL)
@@ -588,5 +588,5 @@ class Adhesiontext(BaseWindowController):
 			pass
 
 		return
-		
+
 Adhesiontext()
