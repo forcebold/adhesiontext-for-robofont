@@ -31,18 +31,18 @@ v1.0 - Dec 03 2012 - First release.
 v1.1 - Dec 26 2012 - Enabled Space Center's RTL-LTR toggling. Improvements and bug fixes in charsCallback().
 v1.2 - Mar 16 2013 - Added Indian scripts and languages.
 v2.0 - Jun 16 2015 - Converted to extension and enabled Mechanic installation.
-                     Enabled the same set of scripts, languages and options as adhesiontext.com.
-                     Enabled storing and recovering the last settings used.
+					 Enabled the same set of scripts, languages and options as adhesiontext.com.
+					 Enabled storing and recovering the last settings used.
 v2.1 - Ago 25 2015 - Assign the focus to the window when it opens.
 """
 
 #=============================================================
 
 scriptsNameList = "Latin Cyrillic Greek Armenian \
-                   Arabic Hebrew \
-                   Bengali Devanagari Gujarati Gurmukhi Odia Sinhala Kannada Malayalam Tamil Telugu \
-                   Burmese Thai Khmer \
-                   Hangul".split()
+				   Arabic Hebrew \
+				   Bengali Devanagari Gujarati Gurmukhi Odia Sinhala Kannada Malayalam Tamil Telugu \
+				   Burmese Thai Khmer \
+				   Hangul".split()
 
 langsNameDict = {
 "Latin"    : "English French German Spanish Catalan Portuguese Dutch Turkish Slovene".split(),
@@ -144,18 +144,30 @@ rightToLeftList = "Arabic Hebrew".split()
 enableTrimCheckList = "Latin Cyrillic Greek".split()
 enableCaseCheckList = "Latin Cyrillic Greek Armenian".split()
 enableFigOptionList = "Arabic \
-                       Bengali Devanagari Gujarati Gurmukhi Odia Kannada Malayalam Tamil Telugu \
-                       Burmese Thai Khmer".split()
+					   Bengali Devanagari Gujarati Gurmukhi Odia Kannada Malayalam Tamil Telugu \
+					   Burmese Thai Khmer".split()
 
 #=============================================================
+
+from fontTools.misc.py23 import *
 
 from mojo.UI import CurrentSpaceCenter, OpenSpaceCenter
 from mojo.extensions import getExtensionDefault, setExtensionDefault
 from vanilla import FloatingWindow, TextBox, EditText, Button, SquareButton, Slider, ProgressSpinner, PopUpButton, CheckBox
 from AppKit import NSBeep, NSWritingDirectionLeftToRight, NSWritingDirectionRightToLeft, NSLeftTextAlignment, NSRightTextAlignment
 from defconAppKit.windows.baseWindow import BaseWindowController
-import urllib, urllib2
 import re
+
+try:
+	# python 3
+	from urllib.request import urlopen, Request, URLError
+	from urllib.parse import urlencode
+except:
+	# python 2
+	from urllib2 import urlopen, Request, URLError
+	from urllib import urlencode
+
+
 
 xmlHeader = '<?xml version="1.0" encoding="UTF-8"?>'
 re_glyph = re.compile(r'<\?xml version="1\.0" encoding="UTF-8"\?>\s+<glyph[\s\S]+</glyph>\s+')
@@ -163,7 +175,7 @@ re_glyphUnicode = re.compile(r'<\s*unicode\s*hex\s*=\s*"([0-9A-Fa-f]{4,5})"\s*/>
 re_glyphName = re.compile(r'<\s*glyph\s*name\s*=\s*"(.+)"\s*format\s*=\s*"\d+"\s*>')
 re_numeral = re.compile(r'[0-9]')
 
-url = 'http://remote.adhesiontext.com/'
+url = 'https://remote.adhesiontext.com/'
 
 maxChars = 100
 
@@ -516,9 +528,9 @@ class Adhesiontext(BaseWindowController):
 
 	def isConnected(self):
 		try:
-			urllib2.urlopen(url, timeout=3)
+			urlopen(url, timeout=3)
 			return True
-		except urllib2.URLError:
+		except URLError:
 			pass
 		return False
 
@@ -551,9 +563,11 @@ class Adhesiontext(BaseWindowController):
 		if self.w.casingCheck.get() and self.w.casingCheck.isEnable():
 			values['casing'] = casingNameList[self.w.casingPopup.get()].lower()
 
-		data = urllib.urlencode(values)
-		request = urllib2.Request(url, data)
-		response = urllib2.urlopen(request)
+		data = urlencode(values)
+		data = data.encode('utf-8')
+		print(data)
+		request = Request(url, data)
+		response = urlopen(request)
 		text = response.read()
 		textU = unicode(text, 'utf-8')
 
@@ -579,7 +593,7 @@ class Adhesiontext(BaseWindowController):
 			OpenSpaceCenter(CurrentFont(), newWindow=False)
 
 		sp = CurrentSpaceCenter()
-
+		print(trimmedText)
 		sp.setRaw(trimmedText)
 
 		# Toggle RTL-LTR
